@@ -7,7 +7,11 @@ obj/
 *.db
 *.db-shm
 *.db-wal
-data/
+# SQLite database files only (không ignore source code folder Data/)
+*.db
+*.db-shm
+*.db-wal
+itwebfrontend_mvc/data/
 
 ## Env
 .env
