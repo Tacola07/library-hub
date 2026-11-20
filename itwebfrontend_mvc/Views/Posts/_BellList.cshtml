@@ -1,0 +1,36 @@
+@model List<Post>
+@{
+    string Cut(string s) => s.Length > 110 ? s[..110].TrimEnd() + "…" : s;
+}
+@* Nội dung cửa sổ nhỏ của nút chuông (tải bằng fetch từ /Posts/Latest) *@
+@if (Model.Count == 0)
+{
+    <p class="muted bell-empty">Chưa có tin tức hoặc khuyến mãi nào.</p>
+}
+else
+{
+    <ul class="bell-list">
+        @foreach (var p in Model)
+        {
+            <li class="bell-item @(p.Kind == PostKinds.Promotion ? "promo" : "news")">
+                <div class="post-tags">
+                    <span class="tag">@p.Kind</span>
+                    <small class="muted">@p.CreatedAt.ToString("dd/MM/yyyy")</small>
+                </div>
+                <b>@p.Title</b>
+                <p>@Cut(p.Content)</p>
+                @if (p.ExpiresAt != null)
+                {
+                    <small class="muted">Hết hạn @p.ExpiresAt.Value.ToString("dd/MM/yyyy")</small>
+                }
+            </li>
+        }
+    </ul>
+}
+<div class="bell-foot">
+    <a class="link" asp-controller="Posts" asp-action="Index">Xem tất cả →</a>
+    @if (User.IsInRole(Roles.Admin))
+    {
+        <a class="small-btn" asp-controller="Posts" asp-action="Create">+ Đăng tin / khuyến mãi</a>
+    }
+</div>

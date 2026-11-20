@@ -1,0 +1,34 @@
+@model Post
+<div class="form-grid">
+    <label class="field">
+        <span>Loại</span>
+        <select asp-for="Kind">
+            @foreach (var k in PostKinds.All) { <option value="@k">@k</option> }
+        </select>
+        <span class="field-error" asp-validation-for="Kind"></span>
+    </label>
+    <label class="field">
+        <span>Tiêu đề</span>
+        <input asp-for="Title" type="text" required />
+        <span class="field-error" asp-validation-for="Title"></span>
+    </label>
+    <label class="field wide">
+        <span>Nội dung</span>
+        <textarea asp-for="Content" rows="6" required></textarea>
+        <span class="field-error" asp-validation-for="Content"></span>
+    </label>
+    <label class="field">
+        <span>Ảnh (đường dẫn, không bắt buộc)</span>
+        <input asp-for="ImageUrl" type="text" placeholder="/assets/cover-1.webp" />
+        <span class="field-error" asp-validation-for="ImageUrl"></span>
+    </label>
+    <label class="field">
+        <span>Ngày hết hạn (không bắt buộc)</span>
+        <input asp-for="ExpiresAt" type="date" />
+        <span class="field-error" asp-validation-for="ExpiresAt"></span>
+    </label>
+    <label class="field check">
+        <input asp-for="IsPublished" type="checkbox" />
+        <span>Hiển thị cho mọi người (bỏ chọn = lưu nháp)</span>
+    </label>
+</div>

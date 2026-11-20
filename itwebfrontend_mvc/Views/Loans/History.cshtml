@@ -1,0 +1,32 @@
+@model IEnumerable<Loan>
+@{ ViewData["Title"] = "Lịch sử mượn"; }
+
+<div class="section-heading"><h2>Lịch sử mượn</h2></div>
+
+<div class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Mã</th><th>Tên sách</th><th>Độc giả</th><th>Ngày mượn</th><th>Hạn trả</th><th>Ngày trả</th><th>Trạng thái</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var l in Model)
+            {
+                <tr>
+                    <td>#@l.Id</td>
+                    <td><div class="title-cell"><img class="thumb" src="@l.Book.CoverUrl" alt="Bìa sách @l.Book.Title" loading="lazy" /><span>@l.Book.Title</span></div></td>
+                    <td>@l.Reader.Name</td>
+                    <td>@l.BorrowDate.ToString("yyyy-MM-dd")</td>
+                    <td>@l.DueDate.ToString("yyyy-MM-dd")</td>
+                    <td>@(l.ReturnedDate?.ToString("yyyy-MM-dd") ?? "—")</td>
+                    <td><span class="tag @(l.IsOverdue ? "overdue" : l.IsReturned ? "returned" : null)">@l.Status</span></td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="empty">Chưa có lịch sử mượn</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

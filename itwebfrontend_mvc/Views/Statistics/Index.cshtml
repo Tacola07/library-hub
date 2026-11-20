@@ -1,0 +1,20 @@
+@model StatisticsViewModel
+@{ ViewData["Title"] = "Thống kê"; }
+
+<div class="section-heading"><h2>Thống kê thư viện</h2></div>
+
+<partial name="_StatCards" model="Model.Stats" />
+
+<div class="panel">
+    <h3>Tổng quan theo thể loại</h3>
+    <div class="stat-charts">
+        @foreach (var g in Model.ByCategory)
+        {
+            <div class="chart">
+                <span>@g.Category</span>
+                <b>@g.Copies</b>
+                <span class="muted">bản sách</span>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,60 @@
+@model ProfileEditViewModel
+@{ ViewData["Title"] = "Chỉnh sửa hồ sơ"; }
+
+<div class="section-heading"><h2>Chỉnh sửa hồ sơ</h2></div>
+
+<div class="panel form-page">
+    <form asp-action="EditProfile" method="post">
+        <div asp-validation-summary="All" class="field-error"></div>
+        <div class="form-grid">
+            <label class="field">
+                <span>Họ tên</span>
+                <input asp-for="Name" type="text" required maxlength="150" />
+                <span class="field-error" asp-validation-for="Name"></span>
+            </label>
+            <label class="field">
+                <span>Email (dùng để đăng nhập, không đổi ở đây)</span>
+                <input value="@Model.Email" type="email" disabled />
+            </label>
+            <label class="field">
+                <span>Số điện thoại</span>
+                <input asp-for="Phone" type="tel" required />
+                <span class="field-error" asp-validation-for="Phone"></span>
+            </label>
+            <label class="field">
+                <span>Địa chỉ</span>
+                <input asp-for="Address" type="text" maxlength="250" />
+                <span class="field-error" asp-validation-for="Address"></span>
+            </label>
+        </div>
+
+        <h4 class="info-title">Thông tin bổ sung</h4>
+        <p class="muted">Ví dụ: Lớp, Mã sinh viên, Ghi chú... Xóa một dòng hoặc để trống cả hai ô để bỏ thông tin đó.</p>
+
+        <div id="infoRows" class="info-rows">
+            @for (var i = 0; i < Model.Infos.Count; i++)
+            {
+                <div class="info-row">
+                    <input type="hidden" name="Infos.index" value="@i" />
+                    <input name="Infos[@i].Label" value="@Model.Infos[i].Label" type="text" maxlength="100" placeholder="Tên thông tin" aria-label="Tên thông tin" />
+                    <input name="Infos[@i].Value" value="@Model.Infos[i].Value" type="text" maxlength="500" placeholder="Giá trị" aria-label="Giá trị" />
+                    <button type="button" class="small-btn danger" data-remove-row>Xóa</button>
+                </div>
+            }
+        </div>
+        <template id="infoRowTemplate">
+            <div class="info-row">
+                <input type="hidden" name="Infos.index" value="__i__" />
+                <input name="Infos[__i__].Label" type="text" maxlength="100" placeholder="Tên thông tin" aria-label="Tên thông tin" />
+                <input name="Infos[__i__].Value" type="text" maxlength="500" placeholder="Giá trị" aria-label="Giá trị" />
+                <button type="button" class="small-btn danger" data-remove-row>Xóa</button>
+            </div>
+        </template>
+        <button type="button" class="small-btn" data-add-row="#infoRows" data-template="#infoRowTemplate">+ Thêm thông tin</button>
+
+        <div class="form-actions">
+            <button class="primary" type="submit">Lưu thay đổi</button>
+            <a class="small-btn" asp-action="Profile">Hủy</a>
+        </div>
+    </form>
+</div>

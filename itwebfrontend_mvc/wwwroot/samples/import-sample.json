@@ -1,0 +1,49 @@
+{
+  "users": [
+    {
+      "name": "Lê Văn A",
+      "email": "levana@example.com",
+      "phone": "0901234567",
+      "address": "Quận 1, TP.HCM",
+      "role": "User",
+      "info": { "Lớp": "CNTT01", "Mã sinh viên": "SV001" }
+    },
+    {
+      "name": "Phạm Thị B",
+      "email": "phamthib@example.com",
+      "phone": "0902345678",
+      "password": "MatKhau@123"
+    }
+  ],
+  "books": [
+    {
+      "title": "Clean Code",
+      "author": "Robert C. Martin",
+      "category": "Công nghệ thông tin",
+      "quantity": 5,
+      "coverUrl": "/assets/cover-4.webp"
+    },
+    {
+      "title": "Thinking, Fast and Slow",
+      "author": "Daniel Kahneman",
+      "category": "Tâm lý học",
+      "quantity": 3
+    }
+  ],
+  "loans": [
+    {
+      "readerEmail": "levana@example.com",
+      "bookTitle": "Clean Code",
+      "borrowDate": "2026-11-10",
+      "dueDate": "2026-11-24"
+    },
+    {
+      "readerEmail": "phamthib@example.com",
+      "bookTitle": "Thinking, Fast and Slow",
+      "bookAuthor": "Daniel Kahneman",
+      "borrowDate": "2026-10-01",
+      "dueDate": "2026-10-15",
+      "returnedDate": "2026-10-12"
+    }
+  ]
+}

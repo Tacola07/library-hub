@@ -1,0 +1,59 @@
+@model PagedResult<Reader>
+@{ ViewData["Title"] = "Quản lý người dùng"; }
+
+<div class="section-heading"><h2>Quản lý người dùng</h2></div>
+
+<div class="panel">
+    <div class="toolbar">
+        <form asp-action="Index" method="get">
+            <input name="q" aria-label="Tìm người dùng" placeholder="Tìm theo tên, email, số điện thoại..." value="@Model.Query" />
+        </form>
+        <div class="heading-actions">
+            <a class="primary" asp-action="Create">+ Thêm người dùng</a>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table id="readerTable">
+            <thead>
+                <tr><th>Mã</th><th>Họ tên</th><th>Email</th><th>Số điện thoại</th><th>Vai trò</th><th>Trạng thái</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model.Items)
+            {
+                <tr>
+                    <td>#@r.Id</td>
+                    <td><a class="row-link" asp-action="Details" asp-route-id="@r.Id">@r.Name</a></td>
+                    <td>@r.Email</td>
+                    <td>@r.Phone</td>
+                    <td>@(r.IsAdmin ? "Quản trị viên" : "Người dùng")</td>
+                    <td><span class="tag @(r.IsActive ? "" : "overdue")">@(r.IsActive ? "Hoạt động" : "Đã khóa")</span></td>
+                    <td>
+                        <div class="actions">
+                            <a class="small-btn" asp-action="Details" asp-route-id="@r.Id">Chi tiết</a>
+                            <a class="small-btn" asp-action="Edit" asp-route-id="@r.Id">Sửa</a>
+                            <form class="inline-form" asp-action="Delete" asp-route-id="@r.Id" method="post" data-confirm="Bạn chắc chắn muốn xóa?">
+                                <button class="small-btn danger" type="submit">Xóa</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="7" class="empty">Chưa có dữ liệu phù hợp</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="pager">
+        <span class="muted">@Model.Total người dùng · Trang @Model.Page / @Model.TotalPages</span>
+        @if (Model.Page > 1)
+        {
+            <a class="small-btn" asp-action="Index" asp-route-q="@Model.Query" asp-route-page="@(Model.Page - 1)">‹ Trước</a>
+        }
+        @if (Model.Page < Model.TotalPages)
+        {
+            <a class="small-btn" asp-action="Index" asp-route-q="@Model.Query" asp-route-page="@(Model.Page + 1)">Sau ›</a>
+        }
+    </div>
+</div>

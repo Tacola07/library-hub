@@ -1,0 +1,13 @@
+@model UserDetailsViewModel
+@{ ViewData["Title"] = "Tài khoản của tôi"; }
+
+<div class="section-heading">
+    <h2>Tài khoản của tôi</h2>
+    <div class="heading-actions">
+        <a class="primary" asp-action="EditProfile">Chỉnh sửa</a>
+        <a class="small-btn" asp-action="ChangePassword">Đổi mật khẩu</a>
+    </div>
+</div>
+
+<partial name="_UserCard" model="Model.Reader" />
+<partial name="_UserLoans" model="Model.Loans" />

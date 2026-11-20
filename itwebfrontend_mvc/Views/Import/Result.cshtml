@@ -1,0 +1,42 @@
+@model ImportReportViewModel
+@{ ViewData["Title"] = "Kết quả nhập dữ liệu"; }
+
+<div class="section-heading">
+    <h2>Kết quả nhập dữ liệu</h2>
+    <div class="heading-actions">
+        <a class="small-btn" asp-action="Index">Nhập thêm</a>
+        <a class="small-btn" asp-controller="Books" asp-action="Index">Xem sách</a>
+        <a class="small-btn" asp-controller="Loans" asp-action="Index">Xem phiếu mượn</a>
+    </div>
+</div>
+
+@foreach (var sec in new[] { Model.Users, Model.Books, Model.Loans })
+{
+    <div class="panel">
+        <h3>@sec.Label</h3>
+        @if (sec.Total == 0)
+        {
+            <p class="muted">@(sec.Present ? "Mảng rỗng, không có gì để nhập." : "Không có trong file.")</p>
+        }
+        else
+        {
+            <div class="stats import-stats">
+                <div class="stat"><div><small>Trong file</small><strong>@sec.Total</strong></div></div>
+                <div class="stat"><div><small>Đã nhập</small><strong>@sec.Imported</strong></div></div>
+                <div class="stat @(sec.Skipped > 0 ? "warn" : null)"><div><small>Bỏ qua</small><strong>@sec.Skipped</strong></div></div>
+            </div>
+            @if (!string.IsNullOrEmpty(sec.Note))
+            {
+                <p class="muted">@sec.Note</p>
+            }
+            @if (sec.Errors.Count > 0)
+            {
+                <p><b>Các bản ghi bị bỏ qua:</b></p>
+                <ul class="error-list">
+                    @foreach (var e in sec.Errors) { <li>@e</li> }
+                </ul>
+                @if (sec.ErrorsTruncated) { <p class="muted">… và còn nhiều dòng lỗi khác (chỉ hiển thị 100 dòng đầu).</p> }
+            }
+        }
+    </div>
+}

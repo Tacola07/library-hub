@@ -1,0 +1,15 @@
+@model Post
+@{ ViewData["Title"] = "Sửa tin / khuyến mãi"; }
+
+<div class="section-heading"><h2>Sửa tin / khuyến mãi</h2></div>
+
+<div class="panel form-page">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <partial name="_PostFields" model="Model" />
+        <div class="form-actions">
+            <button class="primary" type="submit">Lưu</button>
+            <a class="small-btn" asp-action="Index">Hủy</a>
+        </div>
+    </form>
+</div>

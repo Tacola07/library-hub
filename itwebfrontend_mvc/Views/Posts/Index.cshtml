@@ -1,0 +1,24 @@
+@model IEnumerable<Post>
+@{
+    ViewData["Title"] = "Tin tức & khuyến mãi";
+    var isAdmin = User.IsInRole(Roles.Admin);
+}
+
+<div class="section-heading">
+    <h2>Tin tức &amp; khuyến mãi</h2>
+    @if (isAdmin)
+    {
+        <a class="primary" asp-action="Create">+ Đăng tin / khuyến mãi</a>
+    }
+</div>
+
+@if (Model.Any())
+{
+    <div class="post-grid">
+        @foreach (var p in Model) { <partial name="_PostCard" model="p" /> }
+    </div>
+}
+else
+{
+    <div class="panel"><p class="muted">Chưa có tin tức hoặc khuyến mãi nào.</p></div>
+}

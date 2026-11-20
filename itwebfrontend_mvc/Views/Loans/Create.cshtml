@@ -1,0 +1,35 @@
+@model LoanCreateViewModel
+@{ ViewData["Title"] = "Tạo phiếu mượn"; }
+
+<div class="section-heading"><h2>Tạo phiếu mượn</h2></div>
+
+<div class="panel form-page">
+    <form asp-action="Create" method="post">
+        <div class="form-grid">
+            <label class="field">
+                <span>Sách</span>
+                <select asp-for="BookId" asp-items="Model.Books"></select>
+                <span class="field-error" asp-validation-for="BookId"></span>
+            </label>
+            <label class="field">
+                <span>Độc giả</span>
+                <select asp-for="ReaderId" asp-items="Model.Readers"></select>
+                <span class="field-error" asp-validation-for="ReaderId"></span>
+            </label>
+        <label class="field">
+            <span>Ngày mượn</span>
+            <input asp-for="BorrowDate" type="date" required />
+            <span class="field-error" asp-validation-for="BorrowDate"></span>
+        </label>
+        <label class="field">
+            <span>Hạn trả</span>
+            <input asp-for="DueDate" type="date" required />
+            <span class="field-error" asp-validation-for="DueDate"></span>
+        </label>
+        </div>
+        <div class="form-actions">
+            <button class="primary" type="submit">Lưu phiếu mượn</button>
+            <a class="small-btn" asp-action="Index">Hủy</a>
+        </div>
+    </form>
+</div>

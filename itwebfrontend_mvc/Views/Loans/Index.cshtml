@@ -1,0 +1,52 @@
+@model IEnumerable<Loan>
+@{
+    ViewData["Title"] = "Mượn / Trả sách";
+    var isAdmin = User.IsInRole(Roles.Admin);
+}
+
+<div class="section-heading"><h2>Mượn / Trả sách</h2></div>
+
+<div class="panel">
+    <div class="toolbar">
+        <span class="muted">@(isAdmin ? "Theo dõi phiếu mượn và xác nhận trả sách" : "Các sách bạn đang mượn")</span>
+        @if (isAdmin)
+        {
+            <a class="primary" asp-action="Create">+ Tạo phiếu mượn</a>
+        }
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã</th><th>Tên sách</th><th>Độc giả</th><th>Ngày mượn</th><th>Hạn trả</th><th>Trạng thái</th>
+                    @if (isAdmin) { <th>Thao tác</th> }
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var l in Model)
+            {
+                <tr>
+                    <td>#@l.Id</td>
+                    <td><div class="title-cell"><img class="thumb" src="@l.Book.CoverUrl" alt="Bìa sách @l.Book.Title" loading="lazy" /><span>@l.Book.Title</span></div></td>
+                    <td>@l.Reader.Name</td>
+                    <td>@l.BorrowDate.ToString("yyyy-MM-dd")</td>
+                    <td>@l.DueDate.ToString("yyyy-MM-dd")</td>
+                    <td><span class="tag @(l.IsOverdue ? "overdue" : l.IsReturned ? "returned" : null)">@l.Status</span></td>
+                    @if (isAdmin)
+                    {
+                        <td>
+                            <form class="inline-form" asp-action="Return" asp-route-id="@l.Id" method="post">
+                                <button class="small-btn" type="submit">Xác nhận trả</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="@(isAdmin ? 7 : 6)" class="empty">Hiện không có phiếu mượn nào</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

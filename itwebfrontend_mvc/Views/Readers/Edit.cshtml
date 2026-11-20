@@ -1,0 +1,15 @@
+@model ReaderFormViewModel
+@{ ViewData["Title"] = "Sửa người dùng"; }
+
+<div class="section-heading"><h2>Sửa người dùng</h2></div>
+
+<div class="panel form-page">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <partial name="_ReaderFields" model="Model" />
+        <div class="form-actions">
+            <button class="primary" type="submit">Lưu thông tin</button>
+            <a class="small-btn" asp-action="Details" asp-route-id="@Model.Id">Hủy</a>
+        </div>
+    </form>
+</div>

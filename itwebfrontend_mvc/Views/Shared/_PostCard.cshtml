@@ -1,0 +1,32 @@
+@model Post
+@{ var isAdmin = User.IsInRole(Roles.Admin); }
+<article class="post-card @(Model.Kind == PostKinds.Promotion ? "promo" : "news")">
+    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+    {
+        <img class="post-img" src="@Model.ImageUrl" alt="@Model.Title" />
+    }
+    <div class="post-body">
+        <div class="post-tags">
+            <span class="tag">@Model.Kind</span>
+            @if (isAdmin && !Model.IsVisible)
+            {
+                <span class="tag returned">@(Model.IsPublished ? "Hết hạn" : "Bản nháp")</span>
+            }
+        </div>
+        <h3>@Model.Title</h3>
+        <p class="post-text">@Model.Content</p>
+        <small class="muted">
+            Đăng ngày @Model.CreatedAt.ToString("dd/MM/yyyy")
+            @if (Model.ExpiresAt != null) { <text> · Hết hạn @Model.ExpiresAt.Value.ToString("dd/MM/yyyy")</text> }
+        </small>
+        @if (isAdmin)
+        {
+            <div class="actions">
+                <a class="small-btn" asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id">Sửa</a>
+                <form class="inline-form" asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id" method="post" data-confirm="Bạn chắc chắn muốn xóa?">
+                    <button class="small-btn danger" type="submit">Xóa</button>
+                </form>
+            </div>
+        }
+    </div>
+</article>

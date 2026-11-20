@@ -1,0 +1,41 @@
+@model Book
+@{ ViewData["Title"] = "Sửa thông tin sách"; }
+
+<div class="section-heading"><h2>Sửa thông tin sách</h2></div>
+
+<div class="panel form-page">
+    <form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+        <div class="form-grid">
+        <label class="field">
+            <span>Tên sách</span>
+            <input asp-for="Title" type="text" required />
+            <span class="field-error" asp-validation-for="Title"></span>
+        </label>
+        <label class="field">
+            <span>Tác giả</span>
+            <input asp-for="Author" type="text" required />
+            <span class="field-error" asp-validation-for="Author"></span>
+        </label>
+        <label class="field">
+            <span>Thể loại</span>
+            <input asp-for="Category" type="text" required />
+            <span class="field-error" asp-validation-for="Category"></span>
+        </label>
+        <label class="field">
+            <span>Số lượng</span>
+            <input asp-for="Quantity" type="number" required />
+            <span class="field-error" asp-validation-for="Quantity"></span>
+        </label>
+        <label class="field">
+            <span>Ảnh bìa (đường dẫn)</span>
+            <input asp-for="CoverUrl" type="text" required />
+            <span class="field-error" asp-validation-for="CoverUrl"></span>
+        </label>
+        </div>
+        <div class="form-actions">
+            <button class="primary" type="submit">Lưu thông tin</button>
+            <a class="small-btn" asp-action="Index">Hủy</a>
+        </div>
+    </form>
+</div>

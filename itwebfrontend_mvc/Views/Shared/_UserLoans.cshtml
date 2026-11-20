@@ -1,0 +1,25 @@
+@model List<Loan>
+<div class="panel">
+    <h3>Phiếu mượn gần đây</h3>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Mã</th><th>Tên sách</th><th>Ngày mượn</th><th>Hạn trả</th><th>Trạng thái</th></tr></thead>
+            <tbody>
+            @foreach (var l in Model)
+            {
+                <tr>
+                    <td>#@l.Id</td>
+                    <td><div class="title-cell"><img class="thumb" src="@l.Book.CoverUrl" alt="" /><span>@l.Book.Title</span></div></td>
+                    <td>@l.BorrowDate.ToString("yyyy-MM-dd")</td>
+                    <td>@l.DueDate.ToString("yyyy-MM-dd")</td>
+                    <td><span class="tag @(l.IsOverdue ? "overdue" : l.IsReturned ? "returned" : null)">@l.Status</span></td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="5" class="empty">Chưa có phiếu mượn</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

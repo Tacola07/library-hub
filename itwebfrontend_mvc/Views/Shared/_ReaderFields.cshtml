@@ -1,0 +1,40 @@
+@model ReaderFormViewModel
+<div class="form-grid">
+    <label class="field">
+        <span>Họ tên</span>
+        <input asp-for="Name" type="text" required />
+        <span class="field-error" asp-validation-for="Name"></span>
+    </label>
+    <label class="field">
+        <span>Email (dùng để đăng nhập)</span>
+        <input asp-for="Email" type="email" required />
+        <span class="field-error" asp-validation-for="Email"></span>
+    </label>
+    <label class="field">
+        <span>Số điện thoại</span>
+        <input asp-for="Phone" type="tel" required />
+        <span class="field-error" asp-validation-for="Phone"></span>
+    </label>
+    <label class="field">
+        <span>Địa chỉ</span>
+        <input asp-for="Address" type="text" />
+        <span class="field-error" asp-validation-for="Address"></span>
+    </label>
+    <label class="field">
+        <span>Vai trò</span>
+        <select asp-for="Role">
+            <option value="User">Người dùng</option>
+            <option value="Admin">Quản trị viên</option>
+        </select>
+        <span class="field-error" asp-validation-for="Role"></span>
+    </label>
+    <label class="field">
+        <span>Mật khẩu (để trống: tạo mới dùng mặc định / sửa giữ nguyên)</span>
+        <input asp-for="Password" type="password" autocomplete="new-password" />
+        <span class="field-error" asp-validation-for="Password"></span>
+    </label>
+    <label class="field check">
+        <input asp-for="IsActive" type="checkbox" />
+        <span>Tài khoản đang hoạt động (bỏ chọn = khóa đăng nhập)</span>
+    </label>
+</div>

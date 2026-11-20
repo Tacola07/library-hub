@@ -1,0 +1,33 @@
+@model UserDetailsViewModel
+@{
+    ViewData["Title"] = "Chi tiết người dùng";
+    ViewData["CanEdit"] = true;   // _UserCard hiện nút xóa thông tin (chỉ admin vào được trang này)
+}
+
+<div class="section-heading">
+    <h2>Chi tiết người dùng</h2>
+    <div class="heading-actions">
+        <a class="small-btn" asp-action="Edit" asp-route-id="@Model.Reader.Id">Sửa thông tin</a>
+        <a class="small-btn" asp-action="Index">← Danh sách</a>
+    </div>
+</div>
+
+<partial name="_UserCard" model="Model.Reader" />
+
+<div class="panel">
+    <h3>Thêm / cập nhật thông tin bổ sung</h3>
+    <p class="muted">Ví dụ: Lớp, Mã sinh viên, Ghi chú... Nếu tên thông tin đã có, giá trị sẽ được cập nhật.</p>
+    <form class="info-form" asp-action="AddInfo" asp-route-id="@Model.Reader.Id" method="post">
+        <label class="field">
+            <span>Tên thông tin</span>
+            <input name="label" type="text" maxlength="100" required />
+        </label>
+        <label class="field">
+            <span>Giá trị</span>
+            <input name="value" type="text" maxlength="500" required />
+        </label>
+        <button class="primary" type="submit">Lưu</button>
+    </form>
+</div>
+
+<partial name="_UserLoans" model="Model.Loans" />

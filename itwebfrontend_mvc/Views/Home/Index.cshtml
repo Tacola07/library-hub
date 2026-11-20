@@ -1,0 +1,39 @@
+@model HomeViewModel
+@{ ViewData["Title"] = "Trang chủ"; }
+
+<!-- Banner (ảnh nền hero-reference.webp đã có sẵn chữ) -->
+<section class="hero">
+    <div class="hero-copy">
+        <div class="eyebrow">THƯ VIỆN ĐIỆN TỬ</div>
+        <h1>Quản lý tri thức,<br>Kết nối người đọc</h1>
+        <p>Mượn sách, trả sách và khám phá kho tri thức phong phú mọi lúc, mọi nơi.</p>
+        <a class="primary" asp-controller="Books" asp-action="Index">Khám phá ngay →</a>
+    </div>
+</section>
+
+@if (Model.Stats != null)
+{
+    <partial name="_StatCards" model="Model.Stats" />
+}
+
+<div class="section-heading">
+    <h2>Sách mới cập nhật</h2>
+    <a class="link" asp-controller="Books" asp-action="Index">Xem tất cả →</a>
+</div>
+
+<div class="book-grid">
+    @foreach (var b in Model.NewBooks)
+    {
+        <article class="book-card">
+            <div class="cover-frame">
+                <div class="cover"><img class="cover-img" src="@b.CoverUrl" alt="Bìa sách @b.Title" /></div>
+            </div>
+            <h3 title="@b.Title">@b.Title</h3>
+            <p>@b.Author</p>
+            <div class="book-bottom">
+                <span class="tag">@b.Category</span>
+                <a class="bookmark" title="Xem sách" asp-controller="Books" asp-action="Index" asp-route-q="@b.Title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></a>
+            </div>
+        </article>
+    }
+</div>

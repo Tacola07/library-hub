@@ -1,0 +1,37 @@
+@model Reader
+@{
+    // Chỉ admin mới thấy nút xóa thông tin (và chỉ ở trang Chi tiết của admin)
+    var canEdit = ViewData["CanEdit"] as bool? == true && User.IsInRole(Roles.Admin);
+}
+<div class="panel user-card">
+    <div class="user-head">
+        <span class="avatar big">♙</span>
+        <div>
+            <h3>@Model.Name</h3>
+            <span class="tag @(Model.IsAdmin ? "" : "returned")">@(Model.IsAdmin ? "Quản trị viên" : "Người dùng")</span>
+            <span class="tag @(Model.IsActive ? "" : "overdue")">@(Model.IsActive ? "Đang hoạt động" : "Đã khóa")</span>
+        </div>
+    </div>
+    <dl class="info-list">
+        <div><dt>Mã</dt><dd>#@Model.Id</dd></div>
+        <div><dt>Email</dt><dd>@Model.Email</dd></div>
+        <div><dt>Số điện thoại</dt><dd>@Model.Phone</dd></div>
+        <div><dt>Địa chỉ</dt><dd>@(string.IsNullOrWhiteSpace(Model.Address) ? "—" : Model.Address)</dd></div>
+        <div><dt>Ngày tạo</dt><dd>@Model.CreatedAt.ToString("dd/MM/yyyy")</dd></div>
+        @foreach (var i in Model.Infos.OrderBy(x => x.Label))
+        {
+            <div>
+                <dt>@i.Label</dt>
+                <dd>
+                    <span>@i.Value</span>
+                    @if (canEdit)
+                    {
+                        <form class="inline-form" asp-controller="Readers" asp-action="RemoveInfo" asp-route-id="@Model.Id" asp-route-infoId="@i.Id" method="post" data-confirm="Xóa thông tin này?">
+                            <button class="small-btn danger" type="submit">Xóa</button>
+                        </form>
+                    }
+                </dd>
+            </div>
+        }
+    </dl>
+</div>

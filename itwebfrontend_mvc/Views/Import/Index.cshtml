@@ -1,0 +1,66 @@
+@{ ViewData["Title"] = "Nhập dữ liệu JSON"; }
+
+<div class="section-heading"><h2>Nhập dữ liệu JSON</h2></div>
+
+<div class="panel form-page wide-page">
+    <p>
+        Một nơi duy nhất để thêm hàng loạt <b>người dùng</b>, <b>sách</b> và <b>phiếu mượn</b>.
+        Chọn một file <b>.json</b> (≤ 20 MB) hoặc dán nội dung vào ô bên dưới. Mỗi mục tối đa 50.000 bản ghi mỗi lần.
+    </p>
+    <p class="muted">
+        File là một object, mục nào không cần có thể bỏ qua. Thứ tự xử lý: <code>users</code> → <code>books</code> → <code>loans</code>,
+        nên phiếu mượn có thể tham chiếu cả người dùng/sách vừa được nhập trong cùng file.
+        Toàn bộ lần nhập chạy trong một giao dịch CSDL: nếu lỗi CSDL thì hoàn tác tất cả.
+    </p>
+
+    <div class="import-spec">
+        <div>
+            <h4>users</h4>
+            <ul>
+                <li>Bắt buộc: <code>name</code>, <code>email</code>, <code>phone</code></li>
+                <li>Tùy chọn: <code>address</code>, <code>role</code> (User/Admin), <code>isActive</code>, <code>info</code> (cặp tên–giá trị), <code>password</code> (≥ 6 ký tự; bỏ trống = <b>@ItWebFrontend.Helpers.Passwords.DefaultPassword</b>)</li>
+                <li>Email trùng bị bỏ qua</li>
+            </ul>
+        </div>
+        <div>
+            <h4>books</h4>
+            <ul>
+                <li>Bắt buộc: <code>title</code>, <code>author</code>, <code>category</code></li>
+                <li>Tùy chọn: <code>quantity</code> (mặc định 1), <code>coverUrl</code></li>
+                <li>Trùng cả tên + tác giả với sách đã có thì bị bỏ qua</li>
+            </ul>
+        </div>
+        <div>
+            <h4>loans</h4>
+            <ul>
+                <li>Sách: <code>bookId</code> hoặc <code>bookTitle</code> (+ <code>bookAuthor</code> nếu trùng tên)</li>
+                <li>Người mượn: <code>readerId</code> hoặc <code>readerEmail</code></li>
+                <li>Tùy chọn: <code>borrowDate</code> (mặc định hôm nay), <code>dueDate</code> (mặc định +14 ngày), <code>returnedDate</code> (bỏ trống = chưa trả)</li>
+                <li>Ngày dạng <code>yyyy-MM-dd</code> hoặc <code>dd/MM/yyyy</code>. Hết sách thì phiếu chưa trả bị từ chối</li>
+            </ul>
+        </div>
+    </div>
+
+    <pre class="code">{
+  "users": [ { "name": "Lê Văn A", "email": "levana&#64;example.com", "phone": "0901234567" } ],
+  "books": [ { "title": "Clean Code", "author": "Robert C. Martin", "category": "CNTT", "quantity": 5 } ],
+  "loans": [ { "readerEmail": "levana&#64;example.com", "bookTitle": "Clean Code", "dueDate": "2026-12-01" } ]
+}</pre>
+    <p><a class="small-btn" href="~/samples/import-sample.json" download>Tải file JSON mẫu</a></p>
+
+    <form asp-action="Index" method="post" enctype="multipart/form-data">
+        <div class="form-grid single">
+            <label class="field">
+                <span>File JSON</span>
+                <input name="file" type="file" accept=".json,application/json" />
+            </label>
+            <label class="field">
+                <span>Hoặc dán nội dung JSON</span>
+                <textarea name="json" rows="10" spellcheck="false"></textarea>
+            </label>
+        </div>
+        <div class="form-actions">
+            <button class="primary" type="submit">Nhập dữ liệu</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,126 @@
+@{
+    // Xác định menu đang active theo Controller/Action hiện tại
+    var c = ViewContext.RouteData.Values["controller"]?.ToString();
+    var a = ViewContext.RouteData.Values["action"]?.ToString();
+
+    // Khách (chưa đăng nhập) xem ẩn danh được; tính năng cần tài khoản sẽ hỏi trước khi sang trang đăng nhập
+    var isAuth = User.Identity?.IsAuthenticated == true;
+    var isAdmin = User.IsInRole(Roles.Admin);
+    var loginUrl = Url.Action("Login", "Account");
+    // Server chuyển khách về Trang chủ kèm ?needLogin=1&returnUrl=... khi họ gõ thẳng URL của trang cần đăng nhập
+    var needLogin = !isAuth && Context.Request.Query.ContainsKey("needLogin");
+    var rawReturn = Context.Request.Query["returnUrl"].ToString();
+    var returnUrl = Url.IsLocalUrl(rawReturn) ? rawReturn : null;
+    var loginHref = Url.Action("Login", "Account", new { returnUrl });
+}
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LIBRARY HUB | @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- ===== THANH TRÊN CÙNG ===== -->
+    <header class="topbar">
+        <a class="brand" asp-controller="Home" asp-action="Index" style="color:inherit;text-decoration:none">
+            <span class="brand-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>
+            </span>
+            <b>LIBRARY HUB</b>
+            <span class="brand-sub">Hệ thống quản lý thư viện</span>
+        </a>
+
+        <!-- Ô tìm kiếm chung: gửi GET tới /Books?q=... -->
+        <form class="search-wrap" asp-controller="Books" asp-action="Index" method="get">
+            <span>⌕</span>
+            <input id="globalSearch" name="q" placeholder="Tìm kiếm sách, tác giả, thể loại..." />
+            <kbd>Ctrl + K</kbd>
+        </form>
+
+        <div class="account">
+            <!-- Chuông: bấm mở cửa sổ nhỏ tin tức & khuyến mãi (tải khi bấm lần đầu từ /Posts/Latest) -->
+            <div class="bell-wrap">
+                <button type="button" class="bell" id="bellBtn" title="Tin tức &amp; khuyến mãi"
+                        aria-haspopup="true" aria-expanded="false" aria-controls="bellPanel"
+                        data-url="@Url.Action("Latest", "Posts")">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <i></i>
+                </button>
+                <div class="bell-panel" id="bellPanel" hidden>
+                    <div class="bell-head"><b>Tin tức &amp; khuyến mãi</b></div>
+                    <div id="bellBody"><p class="muted bell-empty">Đang tải...</p></div>
+                </div>
+            </div>
+            @if (isAuth)
+            {
+                <a class="account-link" asp-controller="Account" asp-action="Profile" title="Chi tiết tài khoản">
+                    <span class="avatar">♙</span>
+                    <b>@User.Identity?.Name</b>
+                </a>
+                <span class="role-badge">@(isAdmin ? "Admin" : "Người dùng")</span>
+                <form class="inline-form" asp-controller="Account" asp-action="Logout" method="post">
+                    <button class="small-btn" type="submit">Đăng xuất</button>
+                </form>
+            }
+            else
+            {
+                <span class="role-badge">Ẩn danh</span>
+                <a class="primary small" href="@loginUrl">Đăng nhập</a>
+            }
+        </div>
+    </header>
+
+    <div class="shell">
+        <!-- ===== MENU BÊN TRÁI ===== -->
+        <aside class="sidebar">
+            <nav id="nav">
+                <a asp-controller="Home" asp-action="Index" class="@(c == "Home" ? "active" : null)"><span>⌂</span>Trang chủ</a>
+                <a asp-controller="Books" asp-action="Index" class="@(c == "Books" ? "active" : null)"><span>▣</span>Quản lý sách</a>
+                @if (isAdmin)
+                {
+                    <a asp-controller="Readers" asp-action="Index" class="@(c == "Readers" ? "active" : null)"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Quản lý người dùng</a>
+                }
+                <a asp-controller="Loans" asp-action="Index" data-login-required="@(!isAuth ? "1" : null)" class="@(c == "Loans" && a != "History" ? "active" : null)"><span>⇄</span>Mượn / Trả sách</a>
+                <a asp-controller="Loans" asp-action="History" data-login-required="@(!isAuth ? "1" : null)" class="@(c == "Loans" && a == "History" ? "active" : null)"><span>◷</span>Lịch sử mượn</a>
+                @if (isAdmin)
+                {
+                    <a asp-controller="Posts" asp-action="Index" class="@(c == "Posts" ? "active" : null)"><span>✦</span>Tin &amp; khuyến mãi</a>
+                    <a asp-controller="Import" asp-action="Index" class="@(c == "Import" ? "active" : null)"><span>⇪</span>Nhập dữ liệu JSON</a>
+                    <a asp-controller="Statistics" asp-action="Index" class="@(c == "Statistics" ? "active" : null)"><span>▥</span>Thống kê</a>
+                }
+            </nav>
+            <div class="sidebar-foot">
+                <div class="dots"><i></i><i></i><i></i></div>
+            </div>
+        </aside>
+
+        <!-- ===== NỘI DUNG TỪNG TRANG ===== -->
+        <main id="content">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Thông báo nhỏ góc phải. Backend gán TempData["Toast"] sau khi Thêm/Sửa/Xóa -->
+    <div id="toast" role="status" data-message="@TempData["Toast"]"></div>
+
+    @if (!isAuth)
+    {
+        <!-- Popup hỏi trước khi chuyển sang trang đăng nhập -->
+        <div class="modal-backdrop" id="loginModal" hidden="@(needLogin ? null : "hidden")">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+                <h3 id="loginModalTitle">Bạn cần đăng nhập</h3>
+                <p>Tính năng này dành cho thành viên thư viện. Bạn muốn chuyển sang trang đăng nhập, hay tiếp tục xem ẩn danh?</p>
+                <div class="modal-actions">
+                    <a class="primary" id="loginModalGo" href="@loginHref" data-base="@loginUrl">Đăng nhập</a>
+                    <a class="small-btn" href="@Url.Action("Index", "Home")" data-modal-close>Tiếp tục xem ẩn danh</a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
